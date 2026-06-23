@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Multilingual Language Identifier{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <div class="mb-4">
+                <i class="fas fa-globe fa-5x text-primary mb-3"></i>
+            </div>
+            <h1 class="display-3 fw-bold mb-4">Multilingual Language Identifier</h1>
+            <p class="lead text-muted mb-4">
+                Harness the power of AI to instantly identify languages from any text. 
+                Support for 50+ languages with advanced confidence scoring and detailed analytics.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-language me-2"></i>Start Detection
+                </a>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-chart-pie me-2"></i>View Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <h2 class="text-center mb-5">Why Choose Our Language Identifier?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-secondary">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-globe-americas fa-3x text-primary mb-3"></i>
+                            <h5 class="fw-semibold mb-3">50+ Languages</h5>
+                            <p class="text-muted">
+                                Comprehensive support for major world languages including European, Asian, 
+                                African, and Middle Eastern languages with high accuracy detection.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-secondary">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                            <h5 class="fw-semibold mb-3">Confidence Scoring</h5>
+                            <p class="text-muted">
+                                Advanced AI algorithms provide detailed confidence percentages and 
+                                alternative language possibilities for comprehensive analysis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 bg-secondary">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+                            <h5 class="fw-semibold mb-3">Real-time Processing</h5>
+                            <p class="text-muted">
+                                Lightning-fast language detection with instant results and 
+                                interactive visualizations for immediate insights.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="card border-0 bg-primary text-white">
+                <div class="card-body p-4">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="h2 fw-bold">50+</div>
+                            <small>Languages Supported</small>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="h2 fw-bold">99.5%</div>
+                            <small>Average Accuracy</small>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="h2 fw-bold">&lt;1s</div>
+                            <small>Processing Time</small>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="h2 fw-bold">24/7</div>
+                            <small>Availability</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-4 text-center">
+                    <div class="mb-3">
+                        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-edit fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-semibold">1. Input Text</h5>
+                    <p class="text-muted">
+                        Paste or type any text in any language. Our system supports 
+                        everything from single words to full documents.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="mb-3">
+                        <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-cogs fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-semibold">2. AI Analysis</h5>
+                    <p class="text-muted">
+                        Advanced machine learning algorithms analyze linguistic patterns, 
+                        character frequencies, and grammatical structures.
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="mb-3">
+                        <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-chart-bar fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <h5 class="fw-semibold">3. Get Results</h5>
+                    <p class="text-muted">
+                        Receive detailed results with confidence scores, alternative 
+                        possibilities, and comprehensive analytics.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="card border-0 bg-secondary">
+                <div class="card-body p-5">
+                    <h3 class="mb-3">Ready to Get Started?</h3>
+                    <p class="text-muted mb-4">
+                        Try our language detection system now and experience 
+                        the power of AI-driven linguistic analysis.
+                    </p>
+                    <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Start Detecting Languages
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

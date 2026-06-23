@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Visualization - Multilingual Language Identifier{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="display-5 fw-bold mb-3">Visualization - Existing vs Proposed Detection</h1>
+    <p class="lead">Comparison of detection accuracy based on length and language.</p>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.text.label(class="form-label fw-bold") }}
+            {{ form.text(class="form-control", rows="3") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+    {% if lengths_existing and lengths_proposed and lang_labels_existing and lang_labels_proposed %}
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h4 class="text-center">Confidence vs Length (Existing vs Proposed)</h4>
+            <canvas id="lengthChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-center">Confidence vs Language (Existing vs Proposed)</h4>
+            <canvas id="languageChart"></canvas>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h4 class="text-center">Confidence vs Length (Existing Only)</h4>
+            <canvas id="existingLengthChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h4 class="text-center">Confidence vs Length (Proposed Only)</h4>
+            <canvas id="proposedLengthChart"></canvas>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+{% if lengths_existing and lengths_proposed and lang_labels_existing and lang_labels_proposed %}
+    const lengths = {{ lengths_existing|tojson }};
+    const confExistingLength = {{ conf_existing|tojson }};
+    const confProposedLength = {{ conf_proposed|tojson }};
+
+    const langLabelsExisting = {{ lang_labels_existing|tojson }};
+    const confExistingLang = {{ lang_conf_existing|tojson }};
+
+    const langLabelsProposed = {{ lang_labels_proposed|tojson }};
+    const confProposedLang = {{ lang_conf_proposed|tojson }};
+
+    // Chart 1: Length Existing vs Proposed
+    new Chart(document.getElementById('lengthChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: lengths,
+            datasets: [
+                { label: 'Existing', data: confExistingLength, borderColor: 'red', fill: false },
+                { label: 'Proposed', data: confProposedLength, borderColor: 'blue', fill: false }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+    });
+
+    // Chart 2: Language Existing vs Proposed
+    new Chart(document.getElementById('languageChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: langLabelsExisting.concat(langLabelsProposed),
+            datasets: [
+                {
+                    label: 'Existing',
+                    data: confExistingLang.concat(new Array(confProposedLang.length).fill(null)),
+                    backgroundColor: 'orange'
+                },
+                {
+                    label: 'Proposed',
+                    data: new Array(confExistingLang.length).fill(null).concat(confProposedLang),
+                    backgroundColor: 'teal'
+                }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+    });
+
+    // Chart 3: Existing Only vs Length
+    new Chart(document.getElementById('existingLengthChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: lengths,
+            datasets: [
+                { label: 'Existing', data: confExistingLength, borderColor: 'red', fill: false }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+    });
+
+    // Chart 4: Proposed Only vs Length
+    new Chart(document.getElementById('proposedLengthChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: lengths,
+            datasets: [
+                { label: 'Proposed', data: confProposedLength, borderColor: 'blue', fill: false }
+            ]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 1 } } }
+    });
+{% endif %}
+</script>
+{% endblock %}

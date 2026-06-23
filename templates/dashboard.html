@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Multilingual Language Identifier{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">Dashboard</h1>
+                    <p class="text-muted mb-0">Overview of language detection statistics and trends</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('predict') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>New Detection
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing vs Proposed Metrics Header -->
+    <div class="row mb-4">
+        <div class="col-6">
+            <h4 class="fw-bold text-primary">Existing Detection Stats</h4>
+        </div>
+        <div class="col-6">
+            <h4 class="fw-bold text-success">Proposed Detection Stats</h4>
+        </div>
+    </div>
+
+    <!-- Key Metrics Row -->
+    <div class="row g-4 mb-5">
+        <!-- Existing -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-primary text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_existing.total_detections }}</h3>
+                    <p class="mb-0 small">Total Detections</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-success text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_existing.languages_detected }}</h3>
+                    <p class="mb-0 small">Languages Detected</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-info text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_existing.avg_confidence }}%</h3>
+                    <p class="mb-0 small">Avg Confidence</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-warning text-dark h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">
+                        {% if stats_existing.top_languages %}
+                            {{ stats_existing.top_languages[0].name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h3>
+                    <p class="mb-0 small">Most Detected</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proposed -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-primary text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_proposed.total_detections }}</h3>
+                    <p class="mb-0 small">Total Detections</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-success text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_proposed.languages_detected }}</h3>
+                    <p class="mb-0 small">Languages Detected</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-info text-white h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">{{ stats_proposed.avg_confidence }}%</h3>
+                    <p class="mb-0 small">Avg Confidence</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card border-0 bg-warning text-dark h-100">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-1">
+                        {% if stats_proposed.top_languages %}
+                            {{ stats_proposed.top_languages[0].name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h3>
+                    <p class="mb-0 small">Most Detected</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-5">
+        <!-- Existing Detection Chart -->
+        <div class="col-lg-6">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-transparent border-0 pb-0">
+                    <h5 class="card-title fw-semibold"><i class="fas fa-chart-bar me-2 text-primary"></i>Existing Detection Top Languages</h5>
+                </div>
+                <div class="card-body" style="height: 300px;">
+                    <canvas id="existingChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proposed Detection Chart -->
+        <div class="col-lg-6">
+            <div class="card border-0 h-100">
+                <div class="card-header bg-transparent border-0 pb-0">
+                    <h5 class="card-title fw-semibold"><i class="fas fa-chart-bar me-2 text-success"></i>Proposed Detection Top Languages</h5>
+                </div>
+                <div class="card-body" style="height: 300px;">
+                    <canvas id="proposedChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function createBarChart(ctxId, stats, colorPrimary, colorSecondary) {
+        const ctx = document.getElementById(ctxId).getContext('2d');
+
+        if (!stats.top_languages || stats.top_languages.length === 0) {
+            ctx.font = '16px Arial';
+            ctx.fillText('No Data Available', 50, 50);
+            return;
+        }
+
+        const labels = stats.top_languages.map(l => l.name);
+        const data = stats.top_languages.map(l => l.count);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Detections',
+                    data: data,
+                    backgroundColor: colorPrimary,
+                    borderColor: colorSecondary,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    // Existing Chart
+    const existingStats = {{ stats_existing|tojson }};
+    createBarChart(
+        'existingChart',
+        existingStats,
+        ['rgba(54, 162, 235, 0.8)'],
+        ['rgba(54, 162, 235, 1)']
+    );
+
+    // Proposed Chart
+    const proposedStats = {{ stats_proposed|tojson }};
+    createBarChart(
+        'proposedChart',
+        proposedStats,
+        ['rgba(75, 192, 192, 0.8)'],
+        ['rgba(75, 192, 192, 1)']
+    );
+});
+</script>
+{% endblock %}

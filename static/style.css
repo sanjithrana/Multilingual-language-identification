@@ -1,0 +1,170 @@
+/* General body background and text styling */
+body {
+    background-color: #ffffff; /* White background */
+    color: #000000; /* True black text */
+    font-weight: 700; /* Bold text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Confidence score */
+.confidence-score {
+    text-align: center;
+    color: #000000;
+}
+
+.confidence-score .h2 {
+    font-weight: 800; /* Extra bold */
+    margin-bottom: 0.25rem;
+    color: #000000;
+}
+
+/* Enhanced card hover effects */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #bfbfbf;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+/* Progress bars */
+.progress {
+    border-radius: 0.5rem;
+    background-color: #e5e5e5;
+}
+
+.progress-bar {
+    border-radius: 0.5rem;
+    background-color: #007bff;
+}
+
+/* Table styling */
+.table th {
+    border-top: none;
+    font-weight: 800; /* Extra bold */
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #000000;
+    background-color: #f8f9fa;
+}
+
+.table td {
+    vertical-align: middle;
+    color: #000000;
+    font-weight: 700;
+}
+
+/* Form enhancements */
+textarea.form-control {
+    resize: vertical;
+    min-height: 200px;
+    border-radius: 0.5rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 700;
+}
+
+textarea.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.35);
+}
+
+/* Button enhancements */
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-weight: 800;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-lg:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Alert customizations */
+.alert {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-weight: 800;
+    color: #000000;
+}
+
+/* Feature cards */
+.bg-secondary .card-body {
+    padding: 2rem 1.5rem;
+}
+
+/* Icon styling */
+.fa-globe {
+    background: linear-gradient(45deg, #000000, #007bff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+    
+    .confidence-score .h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Loading animation for form submission */
+.btn[type="submit"]:disabled {
+    position: relative;
+    color: transparent;
+}
+
+.btn[type="submit"]:disabled::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from { transform: rotate(0turn); }
+    to { transform: rotate(1turn); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666666;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #000000;
+}

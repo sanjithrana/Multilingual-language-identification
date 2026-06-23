@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Language Prediction - Multilingual Language Identifier{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <h1 class="display-5 fw-bold mb-3">Language Prediction</h1>
+            <p class="lead text-muted">
+                Enter any text below to instantly detect its language with AI-powered analysis
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-language me-2"></i>
+                        Language Detection
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-4">
+                            {{ form.text.label(class="form-label fw-semibold") }}
+                            {{ form.text() }}
+                            {% if form.text.errors %}
+                                <div class="text-danger mt-2">
+                                    {% for error in form.text.errors %}
+                                        <small><i class="fas fa-exclamation-triangle me-1"></i>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    For best results, provide at least a few words or a complete sentence.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit() }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    {% if result %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-search me-2"></i>
+                        Detection Results
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Primary Result -->
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-8">
+                            <h3 class="text-success mb-2">
+                                <i class="fas fa-flag me-2"></i>
+                                {{ result.language }}
+                            </h3>
+                            <p class="text-muted mb-0">
+                                <strong>Language Code:</strong> {{ result.code }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <div class="confidence-score">
+                                <div class="h2 text-success mb-1">{{ result.confidence }}%</div>
+                                <small class="text-muted">Confidence</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Progress Bar -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Detection Confidence</span>
+                            <span class="fw-semibold">{{ result.confidence }}%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {{ result.confidence }}%" 
+                                 aria-valuenow="{{ result.confidence }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Results -->
+                    {% if detailed_results and detailed_results|length > 1 %}
+                    <div class="mt-4">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="fas fa-list me-2"></i>
+                            Alternative Detections
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Language</th>
+                                        <th>Code</th>
+                                        <th>Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lang in detailed_results %}
+                                    <tr {% if loop.index == 1 %}class="table-success"{% endif %}>
+                                        <td>
+                                            {% if loop.index == 1 %}
+                                                <i class="fas fa-crown text-warning"></i>
+                                            {% else %}
+                                                {{ loop.index }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="fw-semibold">{{ lang.language }}</td>
+                                        <td><code>{{ lang.code }}</code></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress me-2" style="width: 60px; height: 6px;">
+                                                    <div class="progress-bar bg-primary" 
+                                                         style="width: {{ lang.confidence }}%"></div>
+                                                </div>
+                                                <span class="text-muted">{{ lang.confidence }}%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8">
+            <div class="card border-0 bg-secondary">
+                <div class="card-body p-4 text-center">
+                    <h6 class="fw-semibold mb-3">Sample Texts to Try</h6>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <button class="btn btn-outline-primary btn-sm sample-text" data-text="Hello, how are you today?">English</button>
+                        <button class="btn btn-outline-primary btn-sm sample-text" data-text="Bonjour, comment allez-vous?">French</button>
+                        <button class="btn btn-outline-primary btn-sm sample-text" data-text="Hola, ¿cómo estás?">Spanish</button>
+                        <button class="btn btn-outline-primary btn-sm sample-text" data-text="Guten Tag, wie geht es Ihnen?">German</button>
+                        <button class="btn btn-outline-primary btn-sm sample-text" data-text="Ciao, come stai?">Italian</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Character counter for textarea
+const textarea = document.querySelector('textarea[name="text"]');
+if (textarea) {
+    const maxLength = 10000;
+    const counter = document.createElement('div');
+    counter.className = 'form-text text-end mt-1';
+    counter.innerHTML = `<small class="text-muted">0 / ${maxLength.toLocaleString()} characters</small>`;
+    textarea.parentNode.appendChild(counter);
+
+    textarea.addEventListener('input', function() {
+        const length = this.value.length;
+        const remaining = maxLength - length;
+        counter.innerHTML = `<small class="${remaining < 100 ? 'text-warning' : 'text-muted'}">${length.toLocaleString()} / ${maxLength.toLocaleString()} characters</small>`;
+    });
+}
+
+// Sample text buttons
+document.querySelectorAll('.sample-text').forEach(button => {
+    button.addEventListener('click', function() {
+        const sampleText = this.getAttribute('data-text');
+        if (textarea) {
+            textarea.value = sampleText;
+            textarea.focus();
+            textarea.dispatchEvent(new Event('input'));
+        }
+    });
+});
+</script>
+{% endblock %}
